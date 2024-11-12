@@ -23,6 +23,8 @@
  */
 
 #include "mdadm.h"
+#include "xmalloc.h"
+
 #include <stdint.h>
 #include <sys/mman.h>
 
