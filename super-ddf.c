@@ -5195,6 +5195,21 @@ static void default_geometry_ddf(struct supertype *st, int *level, int *layout, 
 		*layout = ddf_level_to_layout(*level);
 }
 
+static int update_super_ddf_dummy(struct supertype *st, struct mdinfo *info,
+			 enum update_opt update,
+			 char *devname, int verbose,
+			 int uuid_set, char *homehost)
+{
+	/*
+	 * A dummy update_super function is required to ensure
+	 * reliable handling of DDF metadata in mdadm.
+	 * This implementation acts as a placeholder for cases
+	 * where ss->update_super is not verified.
+	 */
+	dprintf("update_super is not implemented in DDF\n");
+	return 0;
+}
+
 struct superswitch super_ddf = {
 	.examine_super	= examine_super_ddf,
 	.brief_examine_super = brief_examine_super_ddf,
@@ -5212,6 +5227,8 @@ struct superswitch super_ddf = {
 	.match_home	= match_home_ddf,
 	.uuid_from_super= uuid_from_super_ddf,
 	.getinfo_super  = getinfo_super_ddf,
+
+	.update_super = update_super_ddf_dummy,
 
 	.avail_size	= avail_size_ddf,
 
