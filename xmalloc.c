@@ -75,3 +75,14 @@ char *xstrdup(const char *str)
 
 	return exit_memory_alloc_failure();
 }
+
+void *xmemalign(size_t alignment, size_t size)
+{
+	void *ptr = NULL;
+	int result = posix_memalign(&ptr, alignment, size);
+
+	if (result == 0)
+		return ptr;
+
+	return exit_memory_alloc_failure();
+}
