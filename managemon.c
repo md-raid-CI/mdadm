@@ -387,14 +387,17 @@ static void manage_container(struct mdstat_ent *mdstat,
 
 static int sysfs_open2(char *devnum, char *name, char *attr)
 {
+	char buf[SYSFS_MAX_BUF_SIZE];
+
 	int fd = sysfs_open(devnum, name, attr);
 	if (fd >= 0) {
 		/* seq_file in the kernel allocates buffer space
 		 * on the first read.  Do that now so 'monitor'
 		 * never needs too.
 		 */
-		char buf[200];
-		if (read(fd, buf, sizeof(buf)) < 0)
+		int n = read(fd, buf, sizeof(buf));
+
+		if (n <= 0 || n == sizeof(buf))
 			/* pretend not to ignore return value */
 			return fd;
 	}

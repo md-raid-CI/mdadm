@@ -491,7 +491,10 @@ static int read_and_act(struct active_array *a)
 		 * wasn't requested, transition to read-auto.
 		 */
 		char buf[64];
-		read_attr(buf, sizeof(buf), a->metadata_fd);
+		int n = read_attr(buf, sizeof(buf), a->metadata_fd);
+
+		if (n <= 0)
+			return 0;
 		if (strncmp(buf, "external:-", 10) == 0) {
 			/* explicit request for readonly array.  Leave it alone */
 			;

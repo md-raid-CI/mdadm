@@ -13017,7 +13017,8 @@ static int locate_bitmap_imsm(struct supertype *st, int fd, int node_num)
 	offset = get_bitmap_header_sector(super, super->current_vol);
 	dprintf("bitmap header offset is %llu\n", offset);
 
-	lseek64(fd, offset << 9, 0);
+	if (lseek64(fd, offset << 9, 0) < 0LL)
+		return -1;
 
 	return 0;
 }
@@ -13071,7 +13072,8 @@ static int write_init_bitmap_imsm(struct supertype *st, int fd,
 		return -1;
 	memset(buf, 0xFF, MAX_SECTOR_SIZE);
 	offset = get_bitmap_sector(super, vol_idx);
-	lseek64(fd, offset << 9, 0);
+	if (lseek64(fd, offset << 9, 0) < 0LL)
+		return -1;
 	while (written < IMSM_BITMAP_AREA_SIZE) {
 		to_write = IMSM_BITMAP_AREA_SIZE - written;
 		if (to_write > MAX_SECTOR_SIZE)

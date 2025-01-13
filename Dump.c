@@ -207,7 +207,11 @@ int Restore_metadata(char *dev, char *dir, struct context *c,
 		char *chosen = NULL;
 		unsigned int chosen_inode = 0;
 
-		fstat(fd, &dstb);
+		if (fstat(fd, &dstb) != 0) {
+			closedir(d);
+			close(fd);
+			return 1;
+		}
 
 		while (d && (de = readdir(d)) != NULL) {
 			if (de->d_name[0] == '.')
@@ -313,8 +317,8 @@ int Restore_metadata(char *dev, char *dir, struct context *c,
 	}
 	if (c->verbose >= 0)
 		printf("%s restored from %s.\n", dev, fname);
-	close(fl);
 	close(fd);
+	close(fl);
 	free(fname);
 	return 0;
 
